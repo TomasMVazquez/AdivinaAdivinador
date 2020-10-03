@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1078200037085",
+    "firebase_url": "https://adivinaadivinador-tms.firebaseio.com",
+    "project_id": "adivinaadivinador-tms",
+    "storage_bucket": "adivinaadivinador-tms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078200037085:android:b3f5c099be4e6c0918b534",
+        "android_client_info": {
+          "package_name": "com.toms.android.adivinaadivinador"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078200037085-ov6bkogk2diof7g1gfpo6rhea8gb8pna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.toms.android.adivinaadivinador",
+            "certificate_hash": "ffabf51606176acbfd7fa724ce460cbf4b389625"
+          }
+        },
+        {
+          "client_id": "1078200037085-1se7f3ch812sjv245eojdqrfuf8tm883.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8wsTJk85BVKtQ5de8THWFRWkZFZaD-z8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078200037085-1se7f3ch812sjv245eojdqrfuf8tm883.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
