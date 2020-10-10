@@ -15,12 +15,24 @@ class TitleViewModel : ViewModel(){
     val eventPlay: LiveData<Boolean>
         get() = _eventPlay
 
+    private val _eventCreate = MutableLiveData<Boolean>()
+    val eventCreate: LiveData<Boolean>
+        get() = _eventCreate
+
     init {
         _guessList.value = ""
     }
 
     fun onPlay() {
         _eventPlay.value = true
+    }
+
+    fun onCreate(){
+        _eventCreate.value = true
+    }
+
+    fun onCreateComplete() {
+        _eventCreate.value = false
     }
 
     fun onPlayComplete() {

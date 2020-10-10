@@ -21,6 +21,7 @@
     <string name="you_scored">Puntos conseguidos</string>
     <string name="title_text">Adivinar %s</string>
     <string name="play_button">Jugar</string>
+    <string name="create_button">Crear</string>
     <string name="get_ready">Preparate para</string>
     <string name="got_it">Correcto</string>
     <string name="word_is">La Palabra es…</string>
@@ -31,4 +32,6 @@
     <string name="places_list">Ciudades</string>
     <string name="stuff_list">Cosas</string>
     <string name="random_list">Random</string>
+    <string name="create_list">Crear lista</string>
+
 </resources>

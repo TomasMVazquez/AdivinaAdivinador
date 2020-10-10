@@ -32,6 +32,14 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_title_destination_to_createFragment"
+            app:destination="@id/createFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/game_destination"
@@ -68,5 +76,17 @@
             android:name="score"
             android:defaultValue="0"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="com.toms.android.adivinaadivinador.screens.create.CreateFragment"
+        android:label="CreateFragment" >
+        <action
+            android:id="@+id/action_createFragment_to_title_destination"
+            app:destination="@id/title_destination"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 </navigation>

@@ -16,6 +16,7 @@
 
 package com.toms.android.adivinaadivinador.screens.title
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.toms.android.adivinaadivinador.R
-import com.toms.android.adivinaadivinador.databinding.GameFragmentBinding
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
 
 /**
@@ -45,6 +45,8 @@ class TitleFragment : Fragment() {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.title_fragment, container, false)
 
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
         viewModel = ViewModelProvider(this).get(TitleViewModel::class.java)
 
         binding.titleViewModel = viewModel
@@ -58,6 +60,7 @@ class TitleFragment : Fragment() {
             binding.places2.visibility = View.INVISIBLE
             binding.stuff2.visibility = View.INVISIBLE
             binding.random2.visibility = View.INVISIBLE
+            binding.createShadow.visibility = View.INVISIBLE
         }
 
         binding.places.setOnClickListener {
@@ -66,6 +69,7 @@ class TitleFragment : Fragment() {
             binding.places2.visibility = View.VISIBLE
             binding.stuff2.visibility = View.INVISIBLE
             binding.random2.visibility = View.INVISIBLE
+            binding.createShadow.visibility = View.INVISIBLE
         }
 
         binding.stuff.setOnClickListener {
@@ -74,6 +78,7 @@ class TitleFragment : Fragment() {
             binding.places2.visibility = View.INVISIBLE
             binding.stuff2.visibility = View.VISIBLE
             binding.random2.visibility = View.INVISIBLE
+            binding.createShadow.visibility = View.INVISIBLE
         }
 
         binding.random.setOnClickListener {
@@ -82,6 +87,16 @@ class TitleFragment : Fragment() {
             binding.places2.visibility = View.INVISIBLE
             binding.stuff2.visibility = View.INVISIBLE
             binding.random2.visibility = View.VISIBLE
+            binding.createShadow.visibility = View.INVISIBLE
+        }
+
+        binding.create.setOnClickListener {
+            viewModel.onChooseList(this.getString(R.string.create_list))
+            binding.animals2.visibility = View.INVISIBLE
+            binding.places2.visibility = View.INVISIBLE
+            binding.stuff2.visibility = View.INVISIBLE
+            binding.random2.visibility = View.INVISIBLE
+            binding.createShadow.visibility = View.VISIBLE
         }
 
         /*binding.playGameButton.setOnClickListener {
@@ -99,9 +114,23 @@ class TitleFragment : Fragment() {
             }
         })
 
+        viewModel.eventCreate.observe(viewLifecycleOwner, Observer { create ->
+            if (create){
+                val action = TitleFragmentDirections.actionTitleDestinationToCreateFragment()
+                NavHostFragment.findNavController(this).navigate(action)
+                viewModel.onCreateComplete()
+            }
+        })
+
         viewModel.guessList.observe(viewLifecycleOwner, Observer { newList ->
             if (newList.isNotEmpty()) {
-                binding.playGameButton.visibility = View.VISIBLE
+                if (!newList.equals(getString(R.string.create_list))){
+                    binding.playGameButton.visibility = View.VISIBLE
+                    binding.createButton.visibility = View.INVISIBLE
+                }else {
+                    binding.playGameButton.visibility = View.INVISIBLE
+                    binding.createButton.visibility = View.VISIBLE
+                }
             }
         })
 
