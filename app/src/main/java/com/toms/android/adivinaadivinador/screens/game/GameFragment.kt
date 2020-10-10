@@ -31,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.GameFragmentBinding
 
 /**
@@ -54,9 +55,12 @@ class GameFragment : Fragment() {
                 false
         )
 
+        val dataSource = ListDatabase.getInstance(activity!!.application).listDatabaseDao
+
         // Get args using by navArgs property delegate
         val gameFragmentArgs by navArgs<GameFragmentArgs>()
-        viewModelFactory = GameViewModelFactory(activity!!.application,gameFragmentArgs.list)
+        viewModelFactory = GameViewModelFactory(dataSource,activity!!.application,gameFragmentArgs.list)
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 
         binding.gameViewModel = viewModel

@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.text.format.DateUtils
 import androidx.lifecycle.*
 import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.database.ListDatabaseDao
 
 //the different buzz pattern Long array constants here
 private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
@@ -12,7 +13,10 @@ private val PANIC_BUZZ_PATTERN = longArrayOf(0, 200)
 private val GAME_OVER_BUZZ_PATTERN = longArrayOf(0, 2000)
 private val NO_BUZZ_PATTERN = longArrayOf(0)
 
-class GameViewModel(application: Application,list: String): AndroidViewModel(application){
+class GameViewModel(
+        val database: ListDatabaseDao,
+        application: Application,
+        list: String): AndroidViewModel(application){
 
     // These are the three different types of buzzing in the game. Buzz pattern is the number of
     // milliseconds each interval of buzzing and non-buzzing takes.
@@ -200,7 +204,7 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
         if (wordList.isEmpty()) {
             resetList(_listOf)
         }
-        _word.value = wordList.removeAt(0)
+        _word.value = wordList.removeAt(0).toUpperCase()
     }
 
     /** Methods for buttons presses **/
