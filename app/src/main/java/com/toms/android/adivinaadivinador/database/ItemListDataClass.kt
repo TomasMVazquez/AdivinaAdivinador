@@ -9,8 +9,10 @@ import androidx.room.PrimaryKey
 data class ItemListDataClass(
         @PrimaryKey(autoGenerate = true)
         var itemId: Long = 0L,
+
         @ColumnInfo(name = "word")
         var itemWord: String?
+
         //TODO agregar imagen para las palabras
         /*,
         @ColumnInfo(name = "picture")

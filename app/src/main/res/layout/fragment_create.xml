@@ -26,7 +26,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="textNoSuggestions|textCapWords"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnAddWord"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,9 @@
             android:src="@android:drawable/ic_menu_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerCreate" />
+            app:layout_constraintTop_toBottomOf="@+id/recyclerCreate"
+            android:onClick="@{() -> createViewModel.onSaveWordToDataBase()}"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerCreate"
@@ -54,6 +56,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.62" />
+            app:layout_constraintVertical_bias="0.62"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -25,6 +25,7 @@ abstract class ListDatabase : RoomDatabase() {
                             ListDatabase::class.java,
                             "list_created_database"
                     )
+                            .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build()
                     INSTANCE = instance
