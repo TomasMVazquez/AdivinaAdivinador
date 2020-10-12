@@ -27,6 +27,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
 import com.toms.android.adivinaadivinador.getSomeString
 
@@ -40,6 +41,11 @@ class TitleFragment : Fragment() {
 
     private lateinit var binding: TitleFragmentBinding
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onShowMyList()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
@@ -48,7 +54,10 @@ class TitleFragment : Fragment() {
                 inflater, R.layout.title_fragment, container, false)
 
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        viewModelFactory = TitleViewModelFactory(requireActivity().application)
+
+        val dataSource = ListDatabase.getInstance(requireActivity().application).listDatabaseDao
+
+        viewModelFactory = TitleViewModelFactory(dataSource,requireActivity().application)
 
         viewModel = ViewModelProvider(this,viewModelFactory).get(TitleViewModel::class.java)
 
@@ -57,6 +66,13 @@ class TitleFragment : Fragment() {
         // the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
+        viewModel.showMyList.observe(viewLifecycleOwner, Observer { show ->
+            if (show){
+                binding.created.visibility = View.VISIBLE
+                binding.created2.visibility = View.INVISIBLE
+            }
+        })
+
         viewModel.guessList.observe(viewLifecycleOwner, Observer { string ->
             when (string){
                 this.getString(R.string.animals_list) -> {
@@ -64,7 +80,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.VISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
-                    binding.created2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -73,7 +89,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.VISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
-                    binding.created2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -82,7 +98,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.VISIBLE
-                    binding.created2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -100,7 +116,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
-                    binding.created2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
                     binding.random2.visibility = View.VISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -109,18 +125,9 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
-                    binding.created2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.VISIBLE
-                }
-                else -> {
-                    viewModel.endFormatString()
-                    binding.animals2.visibility = View.INVISIBLE
-                    binding.places2.visibility = View.INVISIBLE
-                    binding.stuff2.visibility = View.INVISIBLE
-                    binding.created2.visibility = View.INVISIBLE
-                    binding.random2.visibility = View.INVISIBLE
-                    binding.createShadow.visibility = View.INVISIBLE
                 }
             }
         })

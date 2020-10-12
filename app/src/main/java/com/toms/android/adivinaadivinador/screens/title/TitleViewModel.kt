@@ -6,9 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.database.ListDatabaseDao
 import com.toms.android.adivinaadivinador.getSomeString
 
-class TitleViewModel(application: Application) : AndroidViewModel(application){
+class TitleViewModel(val database: ListDatabaseDao, application: Application) : AndroidViewModel(application){
 
     //Game Finish Event
     private val _guessList = MutableLiveData<String>()
@@ -27,9 +28,13 @@ class TitleViewModel(application: Application) : AndroidViewModel(application){
     val formatStringToShow : LiveData<Boolean>
         get() = _formatStringToShow
 
+    private val _showMyList = MutableLiveData<Boolean>()
+    val showMyList : LiveData<Boolean>
+        get() = _showMyList
 
     init {
         _guessList.value = ""
+        onShowMyList()
     }
 
     fun onPlay() {
@@ -58,6 +63,11 @@ class TitleViewModel(application: Application) : AndroidViewModel(application){
 
     fun endFormatString(){
         _formatStringToShow.value = false
+    }
+
+    fun onShowMyList(){
+        val allWords =  database.getAllWords()
+        _showMyList.value = !allWords.isEmpty()
     }
 
 }

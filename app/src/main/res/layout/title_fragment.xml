@@ -171,7 +171,7 @@
             android:id="@+id/created2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/stuff2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent="0.30"
@@ -191,7 +191,9 @@
             app:layout_constraintStart_toStartOf="@+id/created2"
             app:layout_constraintTop_toTopOf="@+id/created2"
             app:layout_constraintWidth_percent="0.10"
-            app:srcCompat="@drawable/boat" />
+            app:srcCompat="@drawable/boat"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:id="@+id/random2"
