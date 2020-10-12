@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
+import com.toms.android.adivinaadivinador.getSomeString
 
 /**
  * Fragment for the starting or title screen of the app
@@ -35,6 +36,7 @@ import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
 class TitleFragment : Fragment() {
 
     private lateinit var viewModel: TitleViewModel
+    private lateinit var viewModelFactory: TitleViewModelFactory
 
     private lateinit var binding: TitleFragmentBinding
 
@@ -46,58 +48,67 @@ class TitleFragment : Fragment() {
                 inflater, R.layout.title_fragment, container, false)
 
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        viewModelFactory = TitleViewModelFactory(requireActivity().application)
 
-        viewModel = ViewModelProvider(this).get(TitleViewModel::class.java)
+        viewModel = ViewModelProvider(this,viewModelFactory).get(TitleViewModel::class.java)
 
         binding.titleViewModel = viewModel
         // Specify the current activity as the lifecycle owner of the binding. This is used so that
         // the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
-        binding.animals.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.animals_list))
-            binding.animals2.visibility = View.VISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.INVISIBLE
-            binding.createShadow.visibility = View.INVISIBLE
-        }
-
-        binding.places.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.places_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.VISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.INVISIBLE
-            binding.createShadow.visibility = View.INVISIBLE
-        }
-
-        binding.stuff.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.stuff_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.VISIBLE
-            binding.random2.visibility = View.INVISIBLE
-            binding.createShadow.visibility = View.INVISIBLE
-        }
-
-        binding.random.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.random_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.VISIBLE
-            binding.createShadow.visibility = View.INVISIBLE
-        }
-
-        binding.create.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.create_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.INVISIBLE
-            binding.createShadow.visibility = View.VISIBLE
-        }
+        viewModel.guessList.observe(viewLifecycleOwner, Observer { string ->
+            when (string){
+                this.getString(R.string.animals_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.VISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.places_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.VISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.stuff_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.VISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.random_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.VISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.create_list) -> {
+                    viewModel.endFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.VISIBLE
+                }
+                else -> {
+                    viewModel.endFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+            }
+        })
 
         /*binding.playGameButton.setOnClickListener {
             val action = TitleFragmentDirections.actionTitleToGame("HELLO WORLD")

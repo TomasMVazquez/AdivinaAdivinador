@@ -12,11 +12,6 @@ import kotlinx.coroutines.*
 
 class CreateViewModel(val database: ListDatabaseDao, application: Application): AndroidViewModel(application){
 
-    // The current word
-    internal var _word = MutableLiveData<String>()
-    val word : LiveData<String>
-        get() = _word
-
     //Define viewModelJob and assign it an instance of Job.
     private var viewModelJob = Job()
 
@@ -30,9 +25,15 @@ class CreateViewModel(val database: ListDatabaseDao, application: Application): 
     private val uiScope = CoroutineScope(Dispatchers.Main +  viewModelJob)
 
     //Define a variable to hold the current data, and make it MutableLiveData:
-    private var data = MutableLiveData<ItemListDataClass?>()
+    //list created
+    private var _list = MutableLiveData<List<ItemListDataClass>>()
+    val list : LiveData<List<ItemListDataClass>>
+        get() = _list
 
-    private val listCreated = database.getAllWords()
+    //reset EditText Event
+    private val _eventDoneAdding = MutableLiveData<Boolean>()
+    val eventDoneAdding : LiveData<Boolean>
+        get() = _eventDoneAdding
 
     init {
         initializeData()
@@ -41,35 +42,40 @@ class CreateViewModel(val database: ListDatabaseDao, application: Application): 
     private fun initializeData() {
         //Usamos una corutina para obtener la data de la BD para no bloquear la UI mientras esperamos los rdos
         uiScope.launch {
-            data.value = getDataFromDataBase()
+            _list.value = getDataFromDataBase()
         }
+        _eventDoneAdding.value = false
     }
 
     //La marcamos como suspend porque la llamamos desde un corutina
-    private suspend fun getDataFromDataBase(): ItemListDataClass? {
+    private suspend fun getDataFromDataBase(): List<ItemListDataClass>? {
         return withContext(Dispatchers.IO){
-            var data = database.getLastWord()
+            var data = database.getAllWords()
             data
         }
     }
 
-    fun onSaveWordToDataBase(){
-        Log.d(Companion.TAG, "onSaveWordToDataBase: ${word.toString()}")
-        if (!word.value.isNullOrEmpty()) {
+    fun onSaveWordToDataBase(word: String){
+        if (!word.isNullOrEmpty()) {
+            val newWord = ItemListDataClass(itemWord = word)
             uiScope.launch {
-                val newWord = ItemListDataClass(0, "$word")
                 insert(newWord)
-                data.value = getDataFromDataBase()
+                _list.value = getDataFromDataBase()
+                _eventDoneAdding.value = true
             }
         }else{
-            Toast.makeText(getApplication(),"No hay palabara",Toast.LENGTH_SHORT)
+            Log.d(TAG, "onSaveWordToDataBase: SE INTENTO CLICKEAR SIN PALABRAS")
         }
     }
 
-    private suspend fun insert(word: ItemListDataClass){
+    private suspend fun insert(item: ItemListDataClass){
         withContext(Dispatchers.IO){
-            database.insert(word)
+            database.insert(item)
         }
+    }
+
+    fun onFinishAdding(){
+        _eventDoneAdding.value = false
     }
 
     companion object {

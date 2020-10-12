@@ -1,10 +1,14 @@
 package com.toms.android.adivinaadivinador.screens.title
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.getSomeString
 
-class TitleViewModel : ViewModel(){
+class TitleViewModel(application: Application) : AndroidViewModel(application){
 
     //Game Finish Event
     private val _guessList = MutableLiveData<String>()
@@ -18,6 +22,11 @@ class TitleViewModel : ViewModel(){
     private val _eventCreate = MutableLiveData<Boolean>()
     val eventCreate: LiveData<Boolean>
         get() = _eventCreate
+
+    private val _formatStringToShow = MutableLiveData<Boolean>()
+    val formatStringToShow : LiveData<Boolean>
+        get() = _formatStringToShow
+
 
     init {
         _guessList.value = ""
@@ -41,6 +50,14 @@ class TitleViewModel : ViewModel(){
 
     fun onChooseList(newList: String){
         _guessList.value = newList
+    }
+
+    fun startFormatString(){
+        _formatStringToShow.value = true
+    }
+
+    fun endFormatString(){
+        _formatStringToShow.value = false
     }
 
 }

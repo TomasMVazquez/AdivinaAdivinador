@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.FragmentCreateBinding
+import com.toms.android.adivinaadivinador.hideKeyboard
 
 class CreateFragment : Fragment() {
 
@@ -34,9 +36,9 @@ class CreateFragment : Fragment() {
         //get a reference to the application context.
         val application = requireNotNull(this.activity).application
         // get a reference to the DAO of the database
-        val dataSource = ListDatabase.getInstance(application)
+        val dataSource = ListDatabase.getInstance(application).listDatabaseDao
         //Create an instance of the viewModelFactory.
-        val viewModelFactory = CreateViewModelFactory(dataSource.listDatabaseDao, application)
+        val viewModelFactory = CreateViewModelFactory(dataSource, application)
         // Get a reference to the ViewModel associated with this fragment.
         val createViewModel = ViewModelProvider(this,viewModelFactory).get(CreateViewModel::class.java)
 
@@ -46,15 +48,24 @@ class CreateFragment : Fragment() {
 
 
         //Inicializamos el adapter y se lo pasamos al recyclerview
-        /*val adapter = CreateListAdapter()
-        binding.recyclerCreate.adapter = adapter*/
+        val adapter = CreateListAdapter()
+        binding.recyclerCreate.adapter = adapter
 
         //Le pasamos al adapter la data a mostrar
+        createViewModel.list.observe(viewLifecycleOwner, Observer { createdList ->
+            if (createdList != null){
+                adapter.data = createdList
+            }
+        })
 
-        binding.btnAddWord.setOnClickListener {
-            val newWord = binding.editTextNewWord.text.toString()
-            createViewModel._word.value = newWord
-        }
+        //Reseteamos el edit text
+        createViewModel.eventDoneAdding.observe(viewLifecycleOwner, Observer { onAdding ->
+            if (onAdding){
+                binding.editTextNewWord.text.clear()
+                this.hideKeyboard()
+                createViewModel.onFinishAdding()
+            }
+        })
 
         return binding.root
     }

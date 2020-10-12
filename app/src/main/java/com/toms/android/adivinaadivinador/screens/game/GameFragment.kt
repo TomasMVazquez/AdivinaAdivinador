@@ -55,11 +55,11 @@ class GameFragment : Fragment() {
                 false
         )
 
-        val dataSource = ListDatabase.getInstance(activity!!.application).listDatabaseDao
+        val dataSource = ListDatabase.getInstance(requireActivity().application).listDatabaseDao
 
         // Get args using by navArgs property delegate
         val gameFragmentArgs by navArgs<GameFragmentArgs>()
-        viewModelFactory = GameViewModelFactory(dataSource,activity!!.application,gameFragmentArgs.list)
+        viewModelFactory = GameViewModelFactory(dataSource,requireActivity().application,gameFragmentArgs.list)
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(GameViewModel::class.java)
 

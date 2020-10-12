@@ -13,7 +13,7 @@ interface ListDatabaseDao {
 
     //Obtener
     @Query("SELECT * FROM list_created_table ORDER BY itemId DESC")
-    fun getAllWords(): LiveData<List<ItemListDataClass>>
+    fun getAllWords(): List<ItemListDataClass>
 
     //Obtener
     @Query("SELECT * FROM list_created_table ORDER BY itemId DESC LIMIT 1")
