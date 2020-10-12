@@ -33,5 +33,6 @@
     <string name="stuff_list">Cosas</string>
     <string name="random_list">Random</string>
     <string name="create_list">Crear lista</string>
+    <string name="created_list">Mi lista</string>
 
 </resources>

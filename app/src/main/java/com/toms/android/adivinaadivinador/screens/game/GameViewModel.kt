@@ -37,11 +37,13 @@ class GameViewModel(
     val score : LiveData<Int>
         get() = _score
 
+    private val allWords = database.getAllWords()
     // The list of words - the front of the list is the next word to guess
     private lateinit var wordList: MutableList<String>
     private lateinit var animals: MutableList<String>
     private lateinit var places: MutableList<String>
     private lateinit var stuff: MutableList<String>
+    private var created: MutableList<String> = mutableListOf()
 
     private var _listOf = String()
 
@@ -67,7 +69,7 @@ class GameViewModel(
     }
 
     init {
-        var string = getSomeString(R.string.animals_list)
+        getCreatedListfromDataBase()
         if (list != "") {
             _listOf = list
         }
@@ -93,6 +95,12 @@ class GameViewModel(
         }
 
         timer.start()
+    }
+
+    private fun getCreatedListfromDataBase() {
+        allWords.forEach {
+            created.add(it.itemWord.toString())
+        }
     }
 
     override fun onCleared() {
@@ -190,7 +198,7 @@ class GameViewModel(
             getSomeString(R.string.animals_list) -> animals
             getSomeString(R.string.places_list) -> places
             getSomeString(R.string.stuff_list) -> stuff
-            else -> (animals + places + stuff).toMutableList()
+            else -> (animals + places + stuff + created).toMutableList()
         }
 
         wordList.shuffle()

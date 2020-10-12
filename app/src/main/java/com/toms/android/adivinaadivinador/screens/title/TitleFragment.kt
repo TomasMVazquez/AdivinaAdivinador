@@ -64,6 +64,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.VISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.INVISIBLE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -72,6 +73,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.VISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.INVISIBLE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -80,6 +82,16 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.VISIBLE
+                    binding.created2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.created_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.VISIBLE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -88,6 +100,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.INVISIBLE
                     binding.random2.visibility = View.VISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
@@ -96,6 +109,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.INVISIBLE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.VISIBLE
                 }
@@ -104,6 +118,7 @@ class TitleFragment : Fragment() {
                     binding.animals2.visibility = View.INVISIBLE
                     binding.places2.visibility = View.INVISIBLE
                     binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.INVISIBLE
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.INVISIBLE
                 }
