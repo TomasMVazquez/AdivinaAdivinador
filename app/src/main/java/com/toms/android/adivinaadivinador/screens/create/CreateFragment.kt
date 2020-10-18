@@ -53,7 +53,7 @@ class CreateFragment : Fragment() {
         //Le pasamos al adapter la data a mostrar
         createViewModel.list.observe(viewLifecycleOwner, Observer { createdList ->
             if (createdList != null){
-                adapter.data = createdList
+                adapter.submitList(createdList)
             }
         })
 

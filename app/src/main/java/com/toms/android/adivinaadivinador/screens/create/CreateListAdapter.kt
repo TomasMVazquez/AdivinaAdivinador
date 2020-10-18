@@ -4,29 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ItemListDataClass
 
-class CreateListAdapter: RecyclerView.Adapter<CreateListAdapter.ViewHolder>(){
-
-    var data = listOf<ItemListDataClass>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHolder>(ItemListDataClassDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = data[position]
+        val item = getItem(position)
         holder.bind(holder, item)
     }
-
-    override fun getItemCount() = data.size
 
     class ViewHolder private constructor(itemView: View): RecyclerView.ViewHolder(itemView){
         //Atributo del card
@@ -46,5 +39,15 @@ class CreateListAdapter: RecyclerView.Adapter<CreateListAdapter.ViewHolder>(){
 
     }
 
+    class ItemListDataClassDiffCallback : DiffUtil.ItemCallback<ItemListDataClass>() {
+        override fun areItemsTheSame(oldItem: ItemListDataClass, newItem: ItemListDataClass): Boolean {
+            return oldItem.itemId == newItem.itemId
+        }
+
+        override fun areContentsTheSame(oldItem: ItemListDataClass, newItem: ItemListDataClass): Boolean {
+            return oldItem == newItem
+        }
+
+    }
 
 }
