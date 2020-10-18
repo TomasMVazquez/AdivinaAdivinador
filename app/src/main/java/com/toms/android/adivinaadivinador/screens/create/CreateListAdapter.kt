@@ -1,14 +1,12 @@
 package com.toms.android.adivinaadivinador.screens.create
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ItemListDataClass
+import com.toms.android.adivinaadivinador.databinding.DatabaseItemCardBinding
 
 class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHolder>(ItemListDataClassDiffCallback()){
 
@@ -18,25 +16,23 @@ class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHo
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(holder, item)
+        holder.bind(item)
     }
 
-    class ViewHolder private constructor(itemView: View): RecyclerView.ViewHolder(itemView){
-        //Atributo del card
-        val wordTextView: TextView = itemView.findViewById(R.id.txtWord)
+    class ViewHolder private constructor(val binding: DatabaseItemCardBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(holder: ViewHolder, item: ItemListDataClass) {
-            holder.wordTextView.text = item.itemWord.toString()
+        fun bind(item: ItemListDataClass) {
+            binding.word = item
+            binding.executePendingBindings()
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val view =  LayoutInflater.from(parent.context)
-                        .inflate(R.layout.database_item_card, parent, false)
-                return ViewHolder(view)
+                val layoutInflater =  LayoutInflater.from(parent.context)
+                val binding = DatabaseItemCardBinding.inflate(layoutInflater,parent,false)
+                return ViewHolder(binding)
             }
         }
-
     }
 
     class ItemListDataClassDiffCallback : DiffUtil.ItemCallback<ItemListDataClass>() {

@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:elevation="4dp"
-    android:layout_marginBottom="4dp"
-    android:layout_marginTop="4dp"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/txtWord"
+    <data>
+        <variable
+            name="word"
+            type="com.toms.android.adivinaadivinador.database.ItemListDataClass" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25sp"
-        tools:text="Hello Word"
-        android:layout_margin="15dp"
-        />
+        android:elevation="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp">
 
-</com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/txtWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            tools:text="Hello Word"
+            app:itemWord="@{word}"
+            android:layout_margin="15dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>
