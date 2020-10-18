@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/title_destination"
         android:name="com.toms.android.adivinaadivinador.screens.title.TitleFragment"
-        android:label="title_fragment"
+        android:label="@string/app_name"
         tools:layout="@layout/title_fragment">
         <action
             android:id="@+id/action_title_to_game"
@@ -32,11 +32,19 @@
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_title_destination_to_createFragment"
+            app:destination="@id/createFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:launchSingleTop="true"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/game_destination"
         android:name="com.toms.android.adivinaadivinador.screens.game.GameFragment"
-        android:label="game_fragment"
+        android:label="@string/app_name"
         tools:layout="@layout/game_fragment">
         <action
             android:id="@+id/action_game_to_score"
@@ -54,7 +62,7 @@
     <fragment
         android:id="@+id/score_destination"
         android:name="com.toms.android.adivinaadivinador.screens.score.ScoreFragment"
-        android:label="score_fragment"
+        android:label="@string/app_name"
         tools:layout="@layout/score_fragment">
         <action
             android:id="@+id/action_restart"
@@ -68,5 +76,17 @@
             android:name="score"
             android:defaultValue="0"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="com.toms.android.adivinaadivinador.screens.create.CreateFragment"
+        android:label="@string/app_name">
+        <action
+            android:id="@+id/action_createFragment_to_title_destination"
+            app:destination="@id/title_destination"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 </navigation>

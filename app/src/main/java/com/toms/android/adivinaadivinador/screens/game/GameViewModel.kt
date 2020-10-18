@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.text.format.DateUtils
 import androidx.lifecycle.*
 import com.toms.android.adivinaadivinador.R
+import com.toms.android.adivinaadivinador.database.ListDatabaseDao
 
 //the different buzz pattern Long array constants here
 private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
@@ -12,7 +13,10 @@ private val PANIC_BUZZ_PATTERN = longArrayOf(0, 200)
 private val GAME_OVER_BUZZ_PATTERN = longArrayOf(0, 2000)
 private val NO_BUZZ_PATTERN = longArrayOf(0)
 
-class GameViewModel(application: Application,list: String): AndroidViewModel(application){
+class GameViewModel(
+        val database: ListDatabaseDao,
+        application: Application,
+        list: String): AndroidViewModel(application){
 
     // These are the three different types of buzzing in the game. Buzz pattern is the number of
     // milliseconds each interval of buzzing and non-buzzing takes.
@@ -33,11 +37,13 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
     val score : LiveData<Int>
         get() = _score
 
+    private val allWords = database.getAllWords()
     // The list of words - the front of the list is the next word to guess
     private lateinit var wordList: MutableList<String>
     private lateinit var animals: MutableList<String>
     private lateinit var places: MutableList<String>
     private lateinit var stuff: MutableList<String>
+    private var created: MutableList<String> = mutableListOf()
 
     private var _listOf = String()
 
@@ -63,7 +69,7 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
     }
 
     init {
-        var string = getSomeString(R.string.animals_list)
+        getCreatedListfromDataBase()
         if (list != "") {
             _listOf = list
         }
@@ -89,6 +95,12 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
         }
 
         timer.start()
+    }
+
+    private fun getCreatedListfromDataBase() {
+        allWords.forEach {
+            created.add(it.itemWord.toString())
+        }
     }
 
     override fun onCleared() {
@@ -186,7 +198,7 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
             getSomeString(R.string.animals_list) -> animals
             getSomeString(R.string.places_list) -> places
             getSomeString(R.string.stuff_list) -> stuff
-            else -> (animals + places + stuff).toMutableList()
+            else -> (animals + places + stuff + created).toMutableList()
         }
 
         wordList.shuffle()
@@ -200,7 +212,7 @@ class GameViewModel(application: Application,list: String): AndroidViewModel(app
         if (wordList.isEmpty()) {
             resetList(_listOf)
         }
-        _word.value = wordList.removeAt(0)
+        _word.value = wordList.removeAt(0).toUpperCase()
     }
 
     /** Methods for buttons presses **/

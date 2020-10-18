@@ -16,6 +16,7 @@
 
 package com.toms.android.adivinaadivinador.screens.title
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,8 +27,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.toms.android.adivinaadivinador.R
-import com.toms.android.adivinaadivinador.databinding.GameFragmentBinding
+import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
+import com.toms.android.adivinaadivinador.getSomeString
 
 /**
  * Fragment for the starting or title screen of the app
@@ -35,8 +37,14 @@ import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
 class TitleFragment : Fragment() {
 
     private lateinit var viewModel: TitleViewModel
+    private lateinit var viewModelFactory: TitleViewModelFactory
 
     private lateinit var binding: TitleFragmentBinding
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onShowMyList()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -45,44 +53,84 @@ class TitleFragment : Fragment() {
         binding = DataBindingUtil.inflate(
                 inflater, R.layout.title_fragment, container, false)
 
-        viewModel = ViewModelProvider(this).get(TitleViewModel::class.java)
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        val dataSource = ListDatabase.getInstance(requireActivity().application).listDatabaseDao
+
+        viewModelFactory = TitleViewModelFactory(dataSource,requireActivity().application)
+
+        viewModel = ViewModelProvider(this,viewModelFactory).get(TitleViewModel::class.java)
 
         binding.titleViewModel = viewModel
         // Specify the current activity as the lifecycle owner of the binding. This is used so that
         // the binding can observe LiveData updates
         binding.lifecycleOwner = this
 
-        binding.animals.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.animals_list))
-            binding.animals2.visibility = View.VISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.INVISIBLE
-        }
+        viewModel.showMyList.observe(viewLifecycleOwner, Observer { show ->
+            if (show){
+                binding.created.visibility = View.VISIBLE
+                binding.created2.visibility = View.INVISIBLE
+            }
+        })
 
-        binding.places.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.places_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.VISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.INVISIBLE
-        }
-
-        binding.stuff.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.stuff_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.VISIBLE
-            binding.random2.visibility = View.INVISIBLE
-        }
-
-        binding.random.setOnClickListener {
-            viewModel.onChooseList(this.getString(R.string.random_list))
-            binding.animals2.visibility = View.INVISIBLE
-            binding.places2.visibility = View.INVISIBLE
-            binding.stuff2.visibility = View.INVISIBLE
-            binding.random2.visibility = View.VISIBLE
-        }
+        viewModel.guessList.observe(viewLifecycleOwner, Observer { string ->
+            when (string){
+                this.getString(R.string.animals_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.VISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.places_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.VISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.stuff_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.VISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.created_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    binding.created2.visibility = View.VISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.random_list) -> {
+                    viewModel.startFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.random2.visibility = View.VISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
+                this.getString(R.string.create_list) -> {
+                    viewModel.endFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.VISIBLE
+                }
+            }
+        })
 
         /*binding.playGameButton.setOnClickListener {
             val action = TitleFragmentDirections.actionTitleToGame("HELLO WORLD")
@@ -99,9 +147,23 @@ class TitleFragment : Fragment() {
             }
         })
 
+        viewModel.eventCreate.observe(viewLifecycleOwner, Observer { create ->
+            if (create){
+                val action = TitleFragmentDirections.actionTitleDestinationToCreateFragment()
+                NavHostFragment.findNavController(this).navigate(action)
+                viewModel.onCreateComplete()
+            }
+        })
+
         viewModel.guessList.observe(viewLifecycleOwner, Observer { newList ->
             if (newList.isNotEmpty()) {
-                binding.playGameButton.visibility = View.VISIBLE
+                if (!newList.equals(getString(R.string.create_list))){
+                    binding.playGameButton.visibility = View.VISIBLE
+                    binding.createButton.visibility = View.INVISIBLE
+                }else {
+                    binding.playGameButton.visibility = View.INVISIBLE
+                    binding.createButton.visibility = View.VISIBLE
+                }
             }
         })
 
