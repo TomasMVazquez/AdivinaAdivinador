@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +14,7 @@ import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.FragmentCreateBinding
 import com.toms.android.adivinaadivinador.hideKeyboard
+import kotlinx.android.synthetic.main.title_fragment.*
 
 class CreateFragment : Fragment() {
 
@@ -47,7 +49,10 @@ class CreateFragment : Fragment() {
 
 
         //Inicializamos el adapter y se lo pasamos al recyclerview
-        val adapter = CreateListAdapter()
+        val adapter = CreateListAdapter(CreateListListener { itemId ->
+            createViewModel.onStartDeleting()
+            createViewModel.onDeleteWordFromDataBase(itemId)
+        })
         binding.recyclerCreate.adapter = adapter
 
         //Le pasamos al adapter la data a mostrar
@@ -65,6 +70,8 @@ class CreateFragment : Fragment() {
                 createViewModel.onFinishAdding()
             }
         })
+
+
 
         return binding.root
     }

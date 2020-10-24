@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.toms.android.adivinaadivinador.database.ItemListDataClass
 import com.toms.android.adivinaadivinador.databinding.DatabaseItemCardBinding
 
-class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHolder>(ItemListDataClassDiffCallback()){
+class CreateListAdapter(val clickListener: CreateListListener):
+        ListAdapter<ItemListDataClass, CreateListAdapter.ViewHolder>(ItemListDataClassDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -16,13 +17,14 @@ class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHo
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item!!, clickListener)
     }
 
     class ViewHolder private constructor(val binding: DatabaseItemCardBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(item: ItemListDataClass) {
+        fun bind(item: ItemListDataClass, clickListener: CreateListListener) {
             binding.word = item
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
 
@@ -46,4 +48,8 @@ class CreateListAdapter: ListAdapter<ItemListDataClass, CreateListAdapter.ViewHo
 
     }
 
+}
+
+class CreateListListener(val clickListener: (itemId: Long) -> Unit){
+    fun onClick(word: ItemListDataClass) = clickListener(word.itemId)
 }

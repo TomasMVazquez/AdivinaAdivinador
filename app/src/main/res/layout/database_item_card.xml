@@ -7,6 +7,9 @@
         <variable
             name="word"
             type="com.toms.android.adivinaadivinador.database.ItemListDataClass" />
+        <variable
+            name="clickListener"
+            type="com.toms.android.adivinaadivinador.screens.create.CreateListListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -20,10 +23,20 @@
             android:id="@+id/txtWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:textSize="25sp"
-            tools:text="Hello Word"
             app:itemWord="@{word}"
-            android:layout_margin="15dp" />
+            tools:text="Hello Word" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/deleteWord"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/trash_can"
+            android:layout_gravity="end"
+            android:layout_margin="8dp"
+            android:onClick="@{() -> clickListener.onClick(word)}"
+            />
 
     </com.google.android.material.card.MaterialCardView>
 </layout>

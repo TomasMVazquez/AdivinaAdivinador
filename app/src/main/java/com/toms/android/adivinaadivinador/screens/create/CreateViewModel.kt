@@ -35,6 +35,11 @@ class CreateViewModel(val database: ListDatabaseDao, application: Application): 
     val eventDoneAdding : LiveData<Boolean>
         get() = _eventDoneAdding
 
+    //Delete Item
+    private val _eventDoneDelete = MutableLiveData<Boolean>()
+    val eventDoneDelete : LiveData<Boolean>
+        get() = _eventDoneDelete
+
     init {
         initializeData()
     }
@@ -68,14 +73,32 @@ class CreateViewModel(val database: ListDatabaseDao, application: Application): 
         }
     }
 
+    fun onDeleteWordFromDataBase(id: Long){
+        uiScope.launch {
+            delete(id)
+            _list.value = getDataFromDataBase()
+            _eventDoneDelete.value = true
+        }
+    }
+
     private suspend fun insert(item: ItemListDataClass){
         withContext(Dispatchers.IO){
             database.insert(item)
         }
     }
 
+    private suspend fun delete(id: Long){
+        withContext(Dispatchers.IO){
+            database.deleteWord(id)
+        }
+    }
+
     fun onFinishAdding(){
         _eventDoneAdding.value = false
+    }
+
+    fun onStartDeleting(){
+        _eventDoneDelete.value = false
     }
 
     companion object {
