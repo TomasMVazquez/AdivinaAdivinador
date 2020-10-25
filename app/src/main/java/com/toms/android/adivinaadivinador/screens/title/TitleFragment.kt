@@ -148,6 +148,8 @@ class TitleFragment : Fragment() {
             }
         })
 
+        //Get playButton gray if selected
+
         /*binding.playGameButton.setOnClickListener {
             val action = TitleFragmentDirections.actionTitleToGame("HELLO WORLD")
             NavHostFragment.findNavController(this).navigate(action)
