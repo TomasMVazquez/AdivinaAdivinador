@@ -3,6 +3,7 @@ package com.toms.android.adivinaadivinador.screens.game
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.format.DateUtils
+import android.util.Log
 import androidx.lifecycle.*
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabaseDao
