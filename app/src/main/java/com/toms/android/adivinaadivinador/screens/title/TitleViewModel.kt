@@ -11,6 +11,10 @@ import com.toms.android.adivinaadivinador.database.ListDatabaseDao
 import com.toms.android.adivinaadivinador.getSomeString
 import com.toms.android.adivinaadivinador.network.*
 import com.toms.android.adivinaadivinador.screens.game.GameViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +45,10 @@ class TitleViewModel(val database: ListDatabaseDao, application: Application) : 
     private val _eventCallApi = MutableLiveData<Boolean>()
     val eventCallApi: LiveData<Boolean>
         get() = _eventCallApi
+
+    //Coroutines
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
         _guessList.value = ""
@@ -93,21 +101,20 @@ class TitleViewModel(val database: ListDatabaseDao, application: Application) : 
     //Get Images from API
     private fun getAnimalImagesFromAPI(){
         Log.d(TAG, "getAnimalImagesFromAPI: ")
-        ImageApi.retrofitService
-                .getAnimals(QUERY_KEY,"animals", QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_TRANSPARENT)
-                .enqueue(object : Callback<ApiImageContainer> {
-            override fun onFailure(call: Call<ApiImageContainer>, t: Throwable) {
-                //_response.value = "Failure: " + t.message
+        coroutineScope.launch {
+            var getAnimals = ImageApi.retrofitService.getAnimals(QUERY_KEY,"animals", QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_TRANSPARENT)
+            try {
+                var result = getAnimals.await()
+                Log.d(TAG, "onResponse: ${result.totalHits}")
+            }catch (t:Throwable){
                 Log.d(TAG, "onFailure: ${t.message}")
-                onEndedCallApi()
             }
+        }
+    }
 
-            override fun onResponse(call: Call<ApiImageContainer>, response: Response<ApiImageContainer>) {
-                //_response.value = response.body()
-                Log.d(TAG, "onResponse: ${response.body()?.totalHits}")
-                onEndedCallApi()
-            }
-        })
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
     companion object {
