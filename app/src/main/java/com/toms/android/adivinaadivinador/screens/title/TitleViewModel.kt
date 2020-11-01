@@ -42,18 +42,9 @@ class TitleViewModel(val database: ListDatabaseDao, application: Application) : 
     val showMyList : LiveData<Boolean>
         get() = _showMyList
 
-    private val _eventCallApi = MutableLiveData<Boolean>()
-    val eventCallApi: LiveData<Boolean>
-        get() = _eventCallApi
-
-    //Coroutines
-    private var viewModelJob = Job()
-    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
     init {
         _guessList.value = ""
         onShowMyList()
-        onCallApi()
     }
 
     fun onPlay() {
@@ -87,34 +78,6 @@ class TitleViewModel(val database: ListDatabaseDao, application: Application) : 
     fun onShowMyList(){
         val allWords =  database.getAllWords()
         _showMyList.value = !allWords.isEmpty()
-    }
-
-    fun onCallApi(){
-        _eventCallApi.value = true
-        getAnimalImagesFromAPI()
-    }
-
-    fun onEndedCallApi(){
-        _eventCallApi.value = false
-    }
-
-    //Get Images from API
-    private fun getAnimalImagesFromAPI(){
-        Log.d(TAG, "getAnimalImagesFromAPI: ")
-        coroutineScope.launch {
-            var getAnimals = ImageApi.retrofitService.getAnimals(QUERY_KEY,"animals", QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_TRANSPARENT)
-            try {
-                var result = getAnimals.await()
-                Log.d(TAG, "onResponse: ${result.totalHits}")
-            }catch (t:Throwable){
-                Log.d(TAG, "onFailure: ${t.message}")
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 
     companion object {

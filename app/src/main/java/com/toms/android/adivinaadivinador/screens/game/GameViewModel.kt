@@ -6,7 +6,13 @@ import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.*
 import com.toms.android.adivinaadivinador.R
-import com.toms.android.adivinaadivinador.database.ListDatabaseDao
+import com.toms.android.adivinaadivinador.database.*
+import com.toms.android.adivinaadivinador.network.*
+import com.toms.android.adivinaadivinador.screens.title.TitleViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 //the different buzz pattern Long array constants here
 private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
@@ -42,6 +48,7 @@ class GameViewModel(
     // The list of words - the front of the list is the next word to guess
     private lateinit var wordList: MutableList<String>
     private lateinit var animals: MutableList<String>
+    private lateinit var animalKids: MutableList<String>
     private lateinit var places: MutableList<String>
     private lateinit var stuff: MutableList<String>
     private var created: MutableList<String> = mutableListOf()
@@ -69,10 +76,27 @@ class GameViewModel(
         DateUtils.formatElapsedTime(time)
     }
 
+    //Coroutines
+    private var viewModelJob = Job()
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+
+    //Event to show ImageView
+    private val _eventCallApi = MutableLiveData<Boolean>()
+    val eventCallApi: LiveData<Boolean>
+        get() = _eventCallApi
+
+    //Objeto Imagen de la Api
+    private val _imageFromApi = MutableLiveData<ApiImage>()
+    val imageFromApi: LiveData<ApiImage>
+        get() = _imageFromApi
+
     init {
         getCreatedListfromDataBase()
         if (list != "") {
             _listOf = list
+            if (list.equals(getSomeString(R.string.anmals_picture_list))){
+                onCallApi()
+            }
         }
         _eventGameFinish.value = false
         resetList(_listOf)
@@ -104,101 +128,20 @@ class GameViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        timer.cancel()
-    }
-
     /**
      * Resets the list of words and randomizes the order
      */
     private fun resetList(listOf: String) {
-        animals = mutableListOf(
-                "vaca",
-                "perro",
-                "abeja",
-                "águila",
-                "araña",
-                "avispa",
-                "ballena",
-                "bisonte",
-                "búfalo",
-                "burro",
-                "caballo",
-                "camello",
-                "canario",
-                "cangrejo",
-                "canguro",
-                "caracol",
-                "cebra",
-                "cerdo",
-                "chimpancé",
-                "ciervo",
-                "cisne",
-                "cocodrilo",
-                "elefante",
-                "escarabajo",
-                "escorpión",
-                "foca",
-                "gallina",
-                "gallo",
-                "gato",
-                "golondrina",
-                "hipopótamo",
-                "hormiga",
-                "jabalí",
-                "jirafa",
-                "león",
-                "loro",
-                "mosca",
-                "mosquito",
-                "oso",
-                "oveja",
-                "perdiz",
-                "perro",
-                "pingüino",
-                "pollo",
-                "saltamontes",
-                "serpiente",
-                "tigre",
-                "topo",
-                "toro",
-                "tortuga",
-                "vaca",
-                "zorro"
-        )
-        places = mutableListOf(
-                "paris",
-                "madrid",
-                "buenos aires",
-                "nueva york",
-                "tokio",
-                "egipto",
-                "australia",
-                "barcelona",
-                "moscú"
-        )
-        stuff = mutableListOf(
-                "tijera",
-                "peine",
-                "cepillo",
-                "escoba",
-                "silla",
-                "mesa",
-                "coche",
-                "sirena",
-                "cesto",
-                "sillón",
-                "televisor",
-                "radio",
-                "robot",
-                "celular"
-        )
+        animalKids = listOfAnimalsForKids
+        animals = listOfAnimals
+        places = listOfCities
+        stuff = listOfStuffs
 
         wordList = when (listOf) {
             getSomeString(R.string.animals_list) -> animals
             getSomeString(R.string.places_list) -> places
             getSomeString(R.string.stuff_list) -> stuff
+            getSomeString(R.string.anmals_picture_list) -> animalKids
             else -> (animals + places + stuff + created).toMutableList()
         }
 
@@ -214,6 +157,9 @@ class GameViewModel(
             resetList(_listOf)
         }
         _word.value = wordList.removeAt(0).toUpperCase()
+        if (_listOf.equals(getSomeString(R.string.anmals_picture_list))){
+            getAnimalImagesFromAPI(word.value.toString())
+        }
     }
 
     /** Methods for buttons presses **/
@@ -238,8 +184,40 @@ class GameViewModel(
         _eventGameFinish.value = false
     }
 
+    fun onCallApi(){
+        _eventCallApi.value = true
+    }
+
+    fun onEndedCallApi(){
+        _eventCallApi.value = false
+    }
+
     fun getSomeString(id: Int): String? {
         return getApplication<Application>().resources.getString(id)
+    }
+
+    //Get Images from API
+    private fun getAnimalImagesFromAPI(animalToSearch: String){
+        Log.d(TAG, "getAnimalImagesFromAPI: $animalToSearch")
+        coroutineScope.launch {
+            var getAnimals = ImageApi.retrofitService.getAnimals(QUERY_KEY,animalToSearch, QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_ALL)
+            try {
+                var result = getAnimals.await()
+                if (result.hits.size > 0) {
+                    _imageFromApi.value = result.hits[0]
+                }
+                Log.d(TAG, "onResponse: ${result.totalHits}")
+            }catch (t:Throwable){
+                Log.d(TAG, "onFailure: ${t.message}")
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        timer.cancel()
+        viewModelJob.cancel()
+        onEndedCallApi()
     }
 
     companion object {

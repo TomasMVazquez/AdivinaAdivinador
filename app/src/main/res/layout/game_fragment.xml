@@ -19,6 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="gameViewModel"
             type="com.toms.android.adivinaadivinador.screens.game.GameViewModel" />
@@ -34,7 +35,6 @@
             android:id="@+id/word_is_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif"
             android:text="@string/word_is"
             android:textColor="@color/black_text_color"
@@ -53,12 +53,12 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:fontFamily="sans-serif"
+            android:text="@{@string/quote_format(gameViewModel.word)}"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/black_text_color"
             android:textSize="34sp"
             android:textStyle="normal"
-            android:text="@{@string/quote_format(gameViewModel.word)}"
-            app:layout_constraintBottom_toTopOf="@+id/score_text"
+            app:layout_constraintBottom_toTopOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,14 +74,28 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif"
-            android:textColor="@color/grey_text_color"
-            android:textSize="14sp"
-            android:textStyle="normal"
             android:text="@{gameViewModel.currentTimeString}"
+            android:textColor="@color/grey_text_color"
+            android:textSize="12sp"
+            android:textStyle="normal"
             app:layout_constraintBottom_toTopOf="@+id/score_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
             tools:text="0:00" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="@{gameViewModel.eventCallApi ? View.VISIBLE : View.GONE}"
+            app:imageUrl="@{gameViewModel.imageFromApi.imgSrcUrl}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/score_text"
@@ -89,12 +103,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
             android:fontFamily="sans-serif"
+            android:text="@{@string/score_format(gameViewModel.score)}"
             android:textColor="@color/grey_text_color"
             android:textSize="14sp"
             android:textStyle="normal"
-            android:text="@{@string/score_format(gameViewModel.score)}"
-            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Score: 2" />
@@ -119,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="96dp" />
+            app:layout_constraintGuide_end="75dp" />
 
         <Button
             android:id="@+id/correct_button"
