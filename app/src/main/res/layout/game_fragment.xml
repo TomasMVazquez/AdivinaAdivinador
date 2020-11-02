@@ -66,6 +66,28 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="&quot;Tuna&quot;" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="250dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="@{gameViewModel.eventCallApi ? View.VISIBLE : View.GONE}"
+            app:imageUrl="@{gameViewModel.imageFromApi.imgSrcUrl}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <ImageView
+            android:id="@+id/lgoPixabay"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:visibility="@{gameViewModel.eventCallApi ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:srcCompat="@drawable/logo_pixabay" />
+
         <TextView
             android:id="@+id/timer_text"
             android:layout_width="wrap_content"
@@ -83,19 +105,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline"
             tools:text="0:00" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:visibility="@{gameViewModel.eventCallApi ? View.VISIBLE : View.GONE}"
-            app:imageUrl="@{gameViewModel.imageFromApi.imgSrcUrl}"
-            app:layout_constraintBottom_toTopOf="@+id/guideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
             android:id="@+id/score_text"
