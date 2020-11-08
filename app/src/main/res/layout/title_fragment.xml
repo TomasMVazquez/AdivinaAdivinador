@@ -222,6 +222,19 @@
             app:srcCompat="@drawable/picture" />
 
         <ImageView
+            android:id="@+id/noConnection"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/animalPic2"
+            app:layout_constraintEnd_toEndOf="@+id/animalPic2"
+            app:layout_constraintHeight_percent="0.20"
+            app:layout_constraintStart_toStartOf="@+id/animalPic2"
+            app:layout_constraintTop_toTopOf="@+id/animalPic2"
+            app:layout_constraintWidth_percent="0.10"
+            app:srcCompat="@drawable/no_wifi" />
+
+        <ImageView
             android:id="@+id/random2"
             android:layout_width="0dp"
             android:layout_height="0dp"

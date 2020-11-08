@@ -1,23 +1,12 @@
 package com.toms.android.adivinaadivinador.screens.title
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabaseDao
 import com.toms.android.adivinaadivinador.getSomeString
-import com.toms.android.adivinaadivinador.network.*
-import com.toms.android.adivinaadivinador.screens.game.GameViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class TitleViewModel(val database: ListDatabaseDao, application: Application) : AndroidViewModel(application){
 
@@ -78,6 +67,13 @@ class TitleViewModel(val database: ListDatabaseDao, application: Application) : 
     fun onShowMyList(){
         val allWords =  database.getAllWords()
         _showMyList.value = !allWords.isEmpty()
+    }
+
+    fun isNotConnected(){
+        if(_guessList.value == getSomeString(getApplication(), R.string.anmals_picture_list)){
+            _guessList.value = ""
+            _eventPlay.value = false
+        }
     }
 
     companion object {

@@ -29,7 +29,8 @@ import androidx.navigation.fragment.NavHostFragment
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
-import com.toms.android.adivinaadivinador.getSomeString
+import com.toms.android.adivinaadivinador.network.ConnectionStateLiveData
+import com.toms.android.adivinaadivinador.network.NetworkAvailability
 
 /**
  * Fragment for the starting or title screen of the app
@@ -145,6 +146,16 @@ class TitleFragment : Fragment() {
                     binding.random2.visibility = View.INVISIBLE
                     binding.createShadow.visibility = View.VISIBLE
                 }
+                else -> {
+                    viewModel.endFormatString()
+                    binding.animals2.visibility = View.INVISIBLE
+                    binding.places2.visibility = View.INVISIBLE
+                    binding.stuff2.visibility = View.INVISIBLE
+                    if (viewModel.showMyList.value!!) binding.created2.visibility = View.INVISIBLE else binding.created2.visibility = View.GONE
+                    binding.animalPic2.visibility = View.INVISIBLE
+                    binding.random2.visibility = View.INVISIBLE
+                    binding.createShadow.visibility = View.INVISIBLE
+                }
             }
         })
 
@@ -182,6 +193,18 @@ class TitleFragment : Fragment() {
                     binding.playGameButton.visibility = View.INVISIBLE
                     binding.createButton.visibility = View.VISIBLE
                 }
+            }
+        })
+
+        ConnectionStateLiveData.get(requireContext().applicationContext).observe(viewLifecycleOwner, Observer {
+            if (it == NetworkAvailability.CONNECTED) {
+                binding.noConnection.visibility = View.GONE
+                binding.animalPic.isClickable = true
+            }else{
+                binding.noConnection.visibility = View.VISIBLE
+                binding.animalPic.isClickable = false
+                binding.playGameButton.visibility = View.INVISIBLE
+                viewModel.isNotConnected()
             }
         })
 
