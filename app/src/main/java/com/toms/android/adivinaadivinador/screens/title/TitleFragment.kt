@@ -18,14 +18,14 @@ package com.toms.android.adivinaadivinador.screens.title
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.ListDatabase
 import com.toms.android.adivinaadivinador.databinding.TitleFragmentBinding
@@ -55,6 +55,9 @@ class TitleFragment : Fragment() {
                 inflater, R.layout.title_fragment, container, false)
 
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        //Menu
+        setHasOptionsMenu(true)
 
         val dataSource = ListDatabase.getInstance(requireActivity().application).listDatabaseDao
 
@@ -209,5 +212,15 @@ class TitleFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu,menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item!!,NavHostFragment.findNavController(this))
+                || super.onOptionsItemSelected(item)
     }
 }
