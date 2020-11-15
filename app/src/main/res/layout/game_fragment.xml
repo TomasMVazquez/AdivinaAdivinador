@@ -60,6 +60,7 @@
             android:layout_marginEnd="8dp"
             android:visibility="@{gameViewModel.eventCallApi ? View.VISIBLE : View.GONE}"
             app:imageUrl="@{gameViewModel.imageFromApi.imgSrcUrl}"
+            app:apiStatus="@{gameViewModel.status}"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

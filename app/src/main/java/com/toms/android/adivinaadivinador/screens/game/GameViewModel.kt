@@ -3,12 +3,10 @@ package com.toms.android.adivinaadivinador.screens.game
 import android.app.Application
 import android.os.CountDownTimer
 import android.text.format.DateUtils
-import android.util.Log
 import androidx.lifecycle.*
 import com.toms.android.adivinaadivinador.R
 import com.toms.android.adivinaadivinador.database.*
 import com.toms.android.adivinaadivinador.network.*
-import com.toms.android.adivinaadivinador.screens.title.TitleViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -64,7 +62,7 @@ class GameViewModel(
         get() = _eventBuzz
 
     //Timer
-    private val timer : CountDownTimer
+    private lateinit var timer : CountDownTimer
 
     private val _currentTime = MutableLiveData<Long>()
     val currentTime: LiveData<Long>
@@ -82,6 +80,16 @@ class GameViewModel(
     private val _eventCallApi = MutableLiveData<Boolean>()
     val eventCallApi: LiveData<Boolean>
         get() = _eventCallApi
+
+    private val _eventTimerApi = MutableLiveData<Boolean>()
+    val eventTimerApi: LiveData<Boolean>
+        get() = _eventTimerApi
+
+    //Status de la llamada
+    enum class ApiStatus { LOADING, ERROR, DONE }
+    private val _status = MutableLiveData<ApiStatus>()
+    val status: LiveData<ApiStatus>
+        get() = _status
 
     //Objeto Imagen de la Api
     private val _imageFromApi = MutableLiveData<ApiImage>()
@@ -101,7 +109,11 @@ class GameViewModel(
         nextWord()
         _score.value = 0
 
-        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
+        startMyTimer(COUNTDOWN_TIME)
+    }
+
+    private fun startMyTimer(startingTime:Long){
+        timer = object : CountDownTimer(startingTime, ONE_SECOND) {
 
             override fun onTick(millisUntilFinished: Long) {
                 _currentTime.value = (millisUntilFinished / ONE_SECOND)
@@ -115,9 +127,21 @@ class GameViewModel(
                 _eventBuzz.value = BuzzType.GAME_OVER
                 _eventGameFinish.value = true
             }
+
         }
 
         timer.start()
+    }
+
+    private fun stopMyTimer(){
+        timer.cancel()
+    }
+
+    private fun resumeMyTimer(){
+        if (currentTime.value == null) {
+            startMyTimer(COUNTDOWN_TIME)
+            onTimerStopOnce()
+        }
     }
 
     private fun getCreatedListfromDataBase() {
@@ -154,6 +178,7 @@ class GameViewModel(
         _word.value = wordList.removeAt(0).toUpperCase()
         if (_listOf.equals(getSomeString(R.string.anmals_picture_list))){
             getAnimalImagesFromAPI(word.value.toString())
+            _imageFromApi.value
         }
     }
 
@@ -181,6 +206,11 @@ class GameViewModel(
 
     fun onCallApi(){
         _eventCallApi.value = true
+        _eventTimerApi.value = true
+    }
+
+    fun onTimerStopOnce(){
+        _eventTimerApi.value = false
     }
 
     fun onEndedCallApi(){
@@ -196,12 +226,16 @@ class GameViewModel(
         coroutineScope.launch {
             var getAnimals = ImageApi.retrofitService.getAnimals(QUERY_KEY,animalToSearch, QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_ALL)
             try {
+                _status.value = ApiStatus.LOADING
+                if (eventTimerApi.value!!) stopMyTimer()
                 var result = getAnimals.await()
+                if (eventTimerApi.value!!) resumeMyTimer()
+                _status.value = ApiStatus.DONE
                 if (result.hits.size > 0) {
                     _imageFromApi.value = result.hits[0]
                 }
             }catch (t:Throwable){
-                Log.d(TAG, "onFailure: ${t.message}")
+                _status.value = ApiStatus.ERROR
             }
         }
     }

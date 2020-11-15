@@ -69,7 +69,7 @@ class CreateViewModel(val database: ListDatabaseDao, application: Application): 
                 _eventDoneAdding.value = true
             }
         }else{
-            Log.d(TAG, "onSaveWordToDataBase: SE INTENTO CLICKEAR SIN PALABRAS")
+//            Log.d(TAG, "onSaveWordToDataBase: SE INTENTO CLICKEAR SIN PALABRAS")
         }
     }
 
