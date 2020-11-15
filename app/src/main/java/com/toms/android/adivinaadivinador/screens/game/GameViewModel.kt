@@ -47,13 +47,11 @@ class GameViewModel(
     private val allWords = database.getAllWords()
     // The list of words - the front of the list is the next word to guess
     private lateinit var wordList: MutableList<String>
-    private lateinit var animals: MutableList<String>
-    private lateinit var animalKids: MutableList<String>
-    private lateinit var places: MutableList<String>
-    private lateinit var stuff: MutableList<String>
     private var created: MutableList<String> = mutableListOf()
 
     private var _listOf = String()
+    val listOf : String
+        get() = _listOf
 
     //Game Finish Event
     private val _eventGameFinish = MutableLiveData<Boolean>()
@@ -132,17 +130,14 @@ class GameViewModel(
      * Resets the list of words and randomizes the order
      */
     private fun resetList(listOf: String) {
-        animalKids = listOfAnimalsForKids
-        animals = listOfAnimals
-        places = listOfCities
-        stuff = listOfStuffs
 
         wordList = when (listOf) {
-            getSomeString(R.string.animals_list) -> animals
-            getSomeString(R.string.places_list) -> places
-            getSomeString(R.string.stuff_list) -> stuff
-            getSomeString(R.string.anmals_picture_list) -> animalKids
-            else -> (animals + places + stuff + created).toMutableList()
+            getSomeString(R.string.animals_list) -> listOfAnimals.toMutableList()
+            getSomeString(R.string.places_list) -> listOfCities.toMutableList()
+            getSomeString(R.string.stuff_list) -> listOfStuffs.toMutableList()
+            getSomeString(R.string.anmals_picture_list) -> listOfAnimalsForKids.toMutableList()
+            getSomeString(R.string.created_list) -> created.toMutableList()
+            else -> (listOfAnimals + listOfCities + listOfStuffs + created).toMutableList()
         }
 
         wordList.shuffle()
@@ -198,7 +193,6 @@ class GameViewModel(
 
     //Get Images from API
     private fun getAnimalImagesFromAPI(animalToSearch: String){
-        Log.d(TAG, "getAnimalImagesFromAPI: $animalToSearch")
         coroutineScope.launch {
             var getAnimals = ImageApi.retrofitService.getAnimals(QUERY_KEY,animalToSearch, QUERY_LANG_ES, QUERY_IMAGE_TYPE_PHOTO, QUERY_ORIENTATION_H, QUERY_CATEGORY_ANIMALS, QUERY_COLORS_ALL)
             try {
@@ -206,7 +200,6 @@ class GameViewModel(
                 if (result.hits.size > 0) {
                     _imageFromApi.value = result.hits[0]
                 }
-                Log.d(TAG, "onResponse: ${result.totalHits}")
             }catch (t:Throwable){
                 Log.d(TAG, "onFailure: ${t.message}")
             }
@@ -231,7 +224,7 @@ class GameViewModel(
         // This is the number of milliseconds in a second
         const val ONE_SECOND = 1000L
         // This is the total time of the game
-        const val COUNTDOWN_TIME = 65000L
+        const val COUNTDOWN_TIME = 60000L
 
     }
 }

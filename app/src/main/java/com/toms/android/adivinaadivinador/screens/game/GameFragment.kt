@@ -44,6 +44,7 @@ class GameFragment : Fragment() {
 
     private lateinit var binding: GameFragmentBinding
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
@@ -119,7 +120,8 @@ class GameFragment : Fragment() {
      * Called when the game is finished
      */
     private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore(viewModel.score.value ?: 0)
+        val action = GameFragmentDirections.actionGameToScore(viewModel.score.value
+                ?: 0, viewModel.listOf)
         findNavController(this).navigate(action)
     }
 

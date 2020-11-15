@@ -1,6 +1,6 @@
 package com.toms.android.adivinaadivinador.database
 
-public var listOfAnimals: MutableList<String> = mutableListOf(
+public var listOfAnimals: List<String> = listOf(
     "vaca",
     "perro",
     "abeja",
@@ -58,7 +58,7 @@ public var listOfAnimals: MutableList<String> = mutableListOf(
     "vaca",
     "zorro"
 )
-public var listOfAnimalsForKids: MutableList<String> = mutableListOf(
+public var listOfAnimalsForKids: List<String> = listOf(
     "vaca",
     "perro",
     "ballena",
@@ -95,7 +95,7 @@ public var listOfAnimalsForKids: MutableList<String> = mutableListOf(
     "koala",
     "pez"
 )
-public var listOfCities: MutableList<String> = mutableListOf(
+public var listOfCities:  List<String> = listOf(
     "Tokio",
     "Nueva York",
     "Los Ángeles",
@@ -238,7 +238,7 @@ public var listOfCities: MutableList<String> = mutableListOf(
     "Alejandría"
 )
 
-public var listOfStuffs: MutableList<String> = mutableListOf(
+public var listOfStuffs: List<String> = listOf(
     "tijera",
     "peine",
     "cepillo",
