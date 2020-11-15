@@ -27,7 +27,7 @@
     //attributions and Licence
     <string name="title_attribution">Agradecimientos</string>
     <string name="desc_attribution">Esta aplicación no hubiese sido posible sin el uso de ciertos elementos de libre disposición como los iconos, APIs gratuitas de imagenes, códogos libres, entre otros.</string>
-    <string name="desc_2_attribution">Es por ello que queremos agradecerles y reconocerlos aquí, brindando su información, para que usuarios y programadores puedan sobre ellos:</string>
+    <string name="desc_2_attribution">Es por ello que queremos agradecerles y reconocerlos aquí, brindando su información, para que usuarios y programadores puedan saber sobre ellos:</string>
     <string name="flaticon_attribution_freepik"><div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div></string>
     <string name="flaticon_attribution_dinosoftlabs"><div>Icons made by <a href="https://www.flaticon.com/authors/dinosoftlabs" title="DinosoftLabs">DinosoftLabs</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div></string>
     <string name="pixabayn_attributiont">Images provided by Pixabay API <a href="https://pixabay.com/">www.pixabay.com</a></string>
