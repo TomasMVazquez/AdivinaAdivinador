@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 //the different buzz pattern Long array constants here
 private val CORRECT_BUZZ_PATTERN = longArrayOf(100, 100, 100, 100, 100, 100)
@@ -232,7 +233,7 @@ class GameViewModel(
                 if (eventTimerApi.value!!) resumeMyTimer()
                 _status.value = ApiStatus.DONE
                 if (result.hits.size > 0) {
-                    _imageFromApi.value = result.hits[0]
+                    _imageFromApi.value = result.hits[Random.nextInt(0,result.hits.size-1)]
                 }
             }catch (t:Throwable){
                 _status.value = ApiStatus.ERROR
